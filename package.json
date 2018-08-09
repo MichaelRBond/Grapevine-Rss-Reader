@@ -1,0 +1,68 @@
+{
+  "name": "Grapevine-Rss-Reader",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MichaelRBond/Grapevine-Rss-Reader.git",
+  "author": "Michael Bond <MichaelRBond@users.noreply.github.com>",
+  "license": "GPL3",
+  "private": false,
+  "scripts": {
+    "build": "webpack -p --optimize-minimize --define process.env.NODE_ENV=\"${NODE_ENV}\"",
+    "lint": "tslint --project tsconfig.json -e node_modules src/**/*.ts src/**/*.tsx src/*.tsx test/**/*.ts",
+    "start": "webpack-serve ./webpack.config.js --port 8001 --host 0.0.0.0",
+    "test": "CONFIG_ENV=test jest --coverage --no-cache",
+    "verify": "yarn lint && yarn test && yarn run build"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "@types/jest": "^23.3.1",
+    "@types/query-string": "^6.1.0",
+    "@types/react": "^16.4.7",
+    "@types/react-bootstrap": "^0.32.11",
+    "@types/react-dom": "^16.0.6",
+    "axios": "^0.18.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "es6-promise": "^4.2.4",
+    "jest": "^23.4.2",
+    "query-string": "^6.1.0",
+    "react": "^16.4.1",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.4.2",
+    "ts-jest": "^23.0.1",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "tslint-language-service": "^0.9.9",
+    "tslint-loader": "^3.6.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0",
+    "webpack-serve": "^2.0.2"
+  },
+  "jest": {
+    "mapCoverage": true,
+    "coverageDirectory": ".build/coverage/remapped",
+    "transform": {
+      ".(ts)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": ".*\\.test.ts$",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules",
+      "<rootDir>/test/",
+      "<rootDir>/src/config/"
+    ],
+    "moduleDirectories": [
+      "<rootDir>/node_modules",
+      "<rootDir>/src/"
+    ],
+    "coverageReporters": [
+      "json"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "tsx"
+    ],
+    "testEnvironment": "node"
+  }
+}
