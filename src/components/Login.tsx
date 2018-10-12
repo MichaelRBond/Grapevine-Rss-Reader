@@ -9,18 +9,22 @@ import {
 import * as React from "react";
 
 interface Props {
-  loginCallback: (e: any) => Promise<void>;
+  loginCallback: (username: string, password: string) => Promise<void>;
 }
 
 interface State {
+  password: string;
   showPassword: boolean;
+  username: string;
 }
 
 export class Login extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      password: "",
       showPassword: false,
+      username: "",
     };
   }
 
@@ -52,6 +56,7 @@ export class Login extends React.Component<Props, State> {
               type="text"
               name="username"
               id="username"
+              onChange={(e: any) => this.setState({username: e.target.value })}
               />
           </FormGroup>
           <FormGroup
@@ -65,16 +70,22 @@ export class Login extends React.Component<Props, State> {
               type={this.state.showPassword ? "text" : "password"}
               name="password"
               id="password"
+              onChange={(e: any) => this.setState({password: e.target.value })}
               />
           </FormGroup>
           <Button
-            onClick={ (e: any) => this.props.loginCallback(e)}
+            onClick={ () => this.submit()}
           >
             Login
           </Button>
         </ControlGroup>
       </div>
     );
+  }
+
+  private submit(): Promise<void> {
+
+    return this.props.loginCallback(this.state.username, this.state.password);
   }
 
   private handleLockClick = () => this.setState({ showPassword: !this.state.showPassword });
