@@ -1,0 +1,51 @@
+#reader-container {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#reader-container > * {
+  padding: 10px;
+  flex: 1 100%;
+}
+
+#groups-container {
+  flex: 1 auto;
+  order: 1;
+}
+
+#feeds-container {
+  flex: 1 auto;
+  order: 2;
+}
+
+#items-container {
+  flex: 5 0px;
+  order: 3;
+}
+
+.grapevine-menu {
+  float: right;
+}
+
+.item-container-button {
+  margin-right: 1em;
+}
+
+.rss-item-date {
+  display: inline-block;
+}
+
+.rss-item-tools {
+  float: right;
+}
+
+.rss-item-header {
+  border-bottom-style: dotted;
+  border-bottom-color: black;
+}
+
+.rss-item {
+  margin: 1em;
+  border-style: solid;
+  border-color: black;
+}

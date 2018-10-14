@@ -1,5 +1,7 @@
+import * as moment from "moment-timezone";
 import config from "../config/index";
 import { HttpClient, HttpRequestConfig } from "../utils/http";
+import { Logger } from "../utils/logger";
 
 interface VerifyAuthenticationResponse {
   verification: boolean;
@@ -39,7 +41,7 @@ interface RssItemApiResponse {
   enclosures?: string[];
   feed_id: number;
   guid: string;
-  id: string;
+  id: number;
   image?: RssItemImage;
   link?: string;
   published: string; // Joi.date(),
@@ -58,15 +60,15 @@ export interface RssItem {
   enclosures?: string[];
   feedId: number;
   guid: string;
-  id: string;
+  id: number;
   image?: RssItemImage;
   link?: string;
-  published: string; // Joi.date(),
+  published: moment.Moment;
   read: boolean;
   starred: boolean;
   summary?: string;
   title?: string;
-  updated: string; // Joi.date(),
+  updated: moment.Moment;
 }
 
 export enum RssItemFlags {
@@ -76,12 +78,21 @@ export enum RssItemFlags {
   "unstarred" = "unstarred",
 }
 
+interface RssItemFlagPayload {
+  flag: RssItemFlags;
+}
+
+interface GrapevineStringResponse {
+  message: string;
+}
+
 export class GrapevineClient {
 
   private static AUTH_URL = "/api/v1/account/verify";
   private static LIST_GROUPS_URL = "/api/v1/group";
   private static FEEDS_IN_GROUP_URL = "/api/v1/group/{id}/feeds";
   private static ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
+  private static ITEMS_STATUS_URL = "/api/v1/item/{id}/status";
 
   private username: string;
   private password: string;
@@ -143,6 +154,20 @@ export class GrapevineClient {
     return response.data.map(this.convertToRssItem);
   }
 
+  public async setItemStatus(itemId: number, status: RssItemFlags): Promise<void> {
+    let url = `${this.endpoint}${GrapevineClient.ITEMS_STATUS_URL}`;
+    url = url.replace(/\{id\}/, itemId.toString());
+    const requestParams = this.getRequestParams(url);
+    const data: RssItemFlagPayload = {flag: status};
+    const response = await this.httpClient.post<RssItemFlagPayload, GrapevineStringResponse>(url, data, requestParams);
+
+    if (response.status !== 200) {
+      Logger.error(`Unable to set item status, status code=${response.status}`);
+    }
+
+    return;
+  }
+
   private initializeCredentials(username: string, password: string): void {
     this.username = username;
     this.password = password;
@@ -171,12 +196,12 @@ export class GrapevineClient {
       id: itemApi.id,
       image: itemApi.image || undefined,
       link: itemApi.link || undefined,
-      published: itemApi.published, // Joi.date(),
+      published: moment(itemApi.published),
       read: itemApi.read,
       starred: itemApi.starred,
       summary: itemApi.summary || undefined,
       title: itemApi.title || undefined,
-      updated: itemApi.updated, // Joi.date(),
+      updated: moment(itemApi.updated),
     };
   }
 

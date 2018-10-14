@@ -32,7 +32,7 @@ export class GroupsList extends React.Component<Props, State> {
       return null;
     }
     return (
-      <div>
+      <div id="groups-container">
         {this.state.groups!.map((group) => {
           return <GroupLink
             group={group}

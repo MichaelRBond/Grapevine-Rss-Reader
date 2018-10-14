@@ -1,6 +1,7 @@
 import { GrapevineClient } from "external-clients/grapevine";
 import { Nullable } from "nullable-ts";
 import * as React from "react";
+import { ReaderHeader } from "./ReaderHeader";
 import { FeedsList } from "./rss/FeedsList";
 import { GroupsList } from "./rss/Groups";
 import { ItemsList } from "./rss/ItemsList";
@@ -31,6 +32,7 @@ export class Reader extends React.Component<Props, State> {
 
     return (
       <div id="reader-container">
+        <ReaderHeader />
         <GroupsList
           grapevine={this.props.grapevine}
           onClickCallback={this.handleGroupLinkClick}
@@ -49,7 +51,7 @@ export class Reader extends React.Component<Props, State> {
   }
 
   private handleGroupLinkClick(groupId: number): void {
-    this.setState({selectedGroup: groupId});
+    this.setState({selectedGroup: groupId, selectedFeed: null});
     return;
   }
 

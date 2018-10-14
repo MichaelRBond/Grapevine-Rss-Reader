@@ -25,7 +25,10 @@ export class FeedsList extends React.Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-     this.getFeeds();
+    if (this.props.groupId === prevProps.groupId) {
+      return;
+    }
+    this.getFeeds();
   }
 
   public render() {
@@ -33,7 +36,7 @@ export class FeedsList extends React.Component<Props, State> {
       return null;
     }
     return (
-      <div>
+      <div id="feeds-container">
         {this.state.feeds!.map((feed) => {
           return <FeedLink
             feed={feed}

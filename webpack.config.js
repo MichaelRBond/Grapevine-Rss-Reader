@@ -26,7 +26,7 @@ module.exports = {
     path: path.join(paths.root, '/dist'),
     publicPath: publicPath + '/'
   },
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   plugins: [
     new webpack.DefinePlugin({
       config: JSON.stringify(config),
@@ -51,6 +51,14 @@ module.exports = {
         test: /\.tsx?$/,
         loaders: [
           'ts-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        include: path.join(__dirname, 'src/styles'),
+        use: [
+          'style-loader',
+          'css-loader',
         ]
       }
     ]

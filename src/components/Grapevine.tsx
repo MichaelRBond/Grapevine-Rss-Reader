@@ -4,6 +4,8 @@ import * as React from "react";
 import { Login } from "./Login";
 import { Reader } from "./Reader";
 
+import "../styles/grapevine.css";
+
 interface Props {
   grapevine: GrapevineClient;
 }

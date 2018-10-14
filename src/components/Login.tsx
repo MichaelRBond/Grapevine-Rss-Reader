@@ -26,6 +26,8 @@ export class Login extends React.Component<Props, State> {
       showPassword: false,
       username: "",
     };
+
+    this.submit = this.submit.bind(this);
   }
 
   public render() {
@@ -43,48 +45,46 @@ export class Login extends React.Component<Props, State> {
 
     return (
       <div id="login" style={{width: "25%"}}>
-        <ControlGroup
-          vertical={true}
-        >
-          <FormGroup
-            label="Username"
-            labelFor="username"
-            labelInfo="(required)"
+        <form onSubmit={(e: any) => this.submit(e)}>
+          <ControlGroup
+            vertical={true}
           >
-            <InputGroup
-              placeholder="Enter your username..."
-              type="text"
-              name="username"
-              id="username"
-              onChange={(e: any) => this.setState({username: e.target.value })}
-              />
-          </FormGroup>
-          <FormGroup
-            label="Password"
-            labelFor="password"
-            labelInfo="(required)"
-          >
-            <InputGroup
-              placeholder="Enter your password..."
-              rightElement={lockButton}
-              type={this.state.showPassword ? "text" : "password"}
-              name="password"
-              id="password"
-              onChange={(e: any) => this.setState({password: e.target.value })}
-              />
-          </FormGroup>
-          <Button
-            onClick={ () => this.submit()}
-          >
-            Login
-          </Button>
-        </ControlGroup>
+            <FormGroup
+              label="Username"
+              labelFor="username"
+              labelInfo="(required)"
+            >
+              <InputGroup
+                placeholder="Enter your username..."
+                type="text"
+                name="username"
+                id="username"
+                onChange={(e: any) => this.setState({username: e.target.value })}
+                />
+            </FormGroup>
+            <FormGroup
+              label="Password"
+              labelFor="password"
+              labelInfo="(required)"
+            >
+              <InputGroup
+                placeholder="Enter your password..."
+                rightElement={lockButton}
+                type={this.state.showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                onChange={(e: any) => this.setState({password: e.target.value })}
+                />
+            </FormGroup>
+            <Button type="submit">Login</Button>
+          </ControlGroup>
+        </form>
       </div>
     );
   }
 
-  private submit(): Promise<void> {
-
+  private submit(e: any): Promise<void> {
+    e.preventDefault();
     return this.props.loginCallback(this.state.username, this.state.password);
   }
 
