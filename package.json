@@ -7,7 +7,7 @@
   "license": "GPL3",
   "private": false,
   "scripts": {
-    "build": "webpack -p --optimize-minimize --define process.env.NODE_ENV=\"${NODE_ENV}\"",
+    "build": "NODE_ENV=production CONFIG_ENV=production webpack --config ./webpage.config.js -p --optimize-minimize --define process.env.NODE_ENV=\"production\"",
     "lint": "tslint --project tsconfig.json -e node_modules src/**/*.ts src/**/*.tsx src/*.tsx test/**/*.ts",
     "start": "webpack-serve ./webpack.config.js --port 8001 --host 0.0.0.0",
     "test": "CONFIG_ENV=test jest --coverage --no-cache",

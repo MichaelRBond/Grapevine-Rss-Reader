@@ -1,5 +1,7 @@
 module.exports = {
   grapevineHost: "http://localhost:3000",
-  mode: "development",
   log: true,
-}
+  mode: "development",
+  publicPath: "http://localhost:8001",
+  sourceMapping: "inline-source-map",
+};

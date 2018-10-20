@@ -16,7 +16,7 @@ const config = require(`${paths.config}/${env}`);
 
 console.log("Building Grapevine RSS Reader with config: ", JSON.stringify(config, null, ' '));
 
-var publicPath = "http://localhost:8001";
+var publicPath = config.publicPath;
 
 module.exports = {
   mode: config.mode,
@@ -26,7 +26,7 @@ module.exports = {
     path: path.join(paths.root, '/dist'),
     publicPath: publicPath + '/'
   },
-  devtool: 'inline-source-map',
+  devtool: config.sourceMapping,
   plugins: [
     new webpack.DefinePlugin({
       config: JSON.stringify(config),
