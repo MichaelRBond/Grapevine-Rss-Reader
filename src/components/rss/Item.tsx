@@ -52,7 +52,9 @@ export class Item extends React.Component<Props, State> {
           </div>
         </div>
         <Collapse isOpen={this.state.expanded}>
-          {item.description && <div dangerouslySetInnerHTML={{__html: item.description}}></div>}
+          {item.description &&
+            <div className="rss-item-text" dangerouslySetInnerHTML={{__html: item.description}}></div>
+          }
         </Collapse>
       </div>
     );

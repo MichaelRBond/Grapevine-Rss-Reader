@@ -1,4 +1,4 @@
-import { Button, Navbar, NavbarGroup } from "@blueprintjs/core";
+import { Button, NonIdealState } from "@blueprintjs/core";
 import { GrapevineClient, RssItem, RssItemFlags } from "external-clients/grapevine";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
@@ -59,21 +59,22 @@ export class ItemsList extends React.Component<Props, State> {
 
     return (
       <div id="items-container">
-        <Navbar>
-          <NavbarGroup align="left">
-            <Button icon="sort-asc" text="Sort" onClick={this.changeSortOrder} className="item-container-button" />
-            <Button text={unreadLabel} onClick={this.changeGetUnreadOnly} className="item-container-button" />
-            <Button icon={starredIcon} onClick={this.changeGetStarredOnly} className="item-container-button" />
-            <Button text="Mark All Read" onClick={this.markAllRead} className="item-container-button" />
-          </NavbarGroup>
-        </Navbar>
-        {this.state.items!.sort(this.sortCompare).map((item) => {
+        <div id="items-container-control-bar">
+          <Button icon="sort-asc" text="Sort" onClick={this.changeSortOrder} className="item-container-button" />
+          <Button text={unreadLabel} onClick={this.changeGetUnreadOnly} className="item-container-button" />
+          <Button icon={starredIcon} onClick={this.changeGetStarredOnly} className="item-container-button" />
+          <Button text="Mark All Read" onClick={this.markAllRead} className="item-container-button" />
+        </div>
+        {this.state.items!.length > 0 && this.state.items!.sort(this.sortCompare).map((item) => {
           return <Item
             grapevine={this.props.grapevine}
             item={item}
             key={`item-${item.id}`}
           />;
         })}
+        {this.state.items!.length === 0 &&
+          <NonIdealState icon="multi-select" description="No feed selected"></NonIdealState>
+        }
       </div>
     );
   }
@@ -81,10 +82,8 @@ export class ItemsList extends React.Component<Props, State> {
   private changeSortOrder(): void {
     Logger.debug("Toggle `sortOrder`");
     if (this.state.sortOrder === "desc") {
-      console.log("set to asc");
       this.setState({sortOrder: "asc"});
     } else {
-      console.log("set to desc");
       this.setState({sortOrder: "desc"});
     }
     return;

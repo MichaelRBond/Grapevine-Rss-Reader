@@ -1,6 +1,7 @@
-import { GrapevineClient, GroupListResponse } from "external-clients/grapevine";
+import { GrapevineClient, RssGroupResponse } from "external-clients/grapevine";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
+import { sortGroupsCompare } from "../../utils/helpers";
 import { GroupLink } from "./GroupLink";
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 interface State {
-  groups: Nullable<GroupListResponse[]>;
+  groups: Nullable<RssGroupResponse[]>;
 }
 
 export class GroupsList extends React.Component<Props, State> {
@@ -46,6 +47,7 @@ export class GroupsList extends React.Component<Props, State> {
 
   private async getGroups(): Promise<void> {
     const groups = await this.props.grapevine.getAllGroupsList();
+    groups.sort(sortGroupsCompare);
     this.setState({groups});
     return;
   }

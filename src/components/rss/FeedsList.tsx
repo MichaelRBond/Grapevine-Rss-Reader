@@ -1,6 +1,7 @@
-import { GrapevineClient, RssFeed } from "external-clients/grapevine";
+import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
+import { sortGroupsCompare } from "../../utils/helpers";
 import { FeedLink } from "./FeedLink";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 interface State {
   feeds: Nullable<RssFeed[]>;
+  groups: RssGroupResponse[];
 }
 
 export class FeedsList extends React.Component<Props, State> {
@@ -19,9 +21,15 @@ export class FeedsList extends React.Component<Props, State> {
 
     this.state = {
       feeds: [],
+      groups: [],
     };
 
     this.getFeeds = this.getFeeds.bind(this);
+  }
+
+  public componentDidMount(): void {
+    this.getFeeds();
+    this.getGroups();
   }
 
   public componentDidUpdate(prevProps: Props): void {
@@ -32,7 +40,7 @@ export class FeedsList extends React.Component<Props, State> {
   }
 
   public render() {
-    if (isNull(this.props.groupId) || isNull(this.state.feeds)) {
+    if (isNull(this.state.feeds)) {
       return null;
     }
     return (
@@ -40,8 +48,10 @@ export class FeedsList extends React.Component<Props, State> {
         {this.state.feeds!.map((feed) => {
           return <FeedLink
             feed={feed}
-            onClickCallback={this.props.onClickCallback}
+            grapevine={this.props.grapevine}
+            groups={this.state.groups}
             key={`feed-${feed.id}`}
+            onClickCallback={this.props.onClickCallback}
           />;
         })}
       </div>
@@ -49,11 +59,20 @@ export class FeedsList extends React.Component<Props, State> {
   }
 
   private async getFeeds(): Promise<void> {
+    let feeds: RssFeed[];
     if (isNull(this.props.groupId)) {
-      return;
+      feeds = await this.props.grapevine.getAllFeeds();
+    } else {
+      feeds = await this.props.grapevine.getFeedsForGroup(this.props.groupId!);
     }
-    const feeds = await this.props.grapevine.getFeedsForGroup(this.props.groupId!);
     this.setState({feeds});
+    return;
+  }
+
+  private async getGroups(): Promise<void> {
+    const groups = await this.props.grapevine.getAllGroupsList();
+    groups.sort(sortGroupsCompare);
+    this.setState({groups});
     return;
   }
 }

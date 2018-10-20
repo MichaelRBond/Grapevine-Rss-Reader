@@ -14,6 +14,7 @@ export interface HttpResponse<T> {
 export class HttpClient {
   constructor() { /* */ }
 
+  // TODO: Refactor Get/Post/Delete once full tested
   public async get<T>(requestConfig: HttpRequestConfig): Promise<HttpResponse<T>> {
     const axiosConfig: AxiosRequestConfig = {
       auth: {
@@ -37,8 +38,8 @@ export class HttpClient {
     };
   }
 
-  // TODO: Refactor Get/Post once full tested
-  public async post<T, K>(url: string, data: T, requestConfig: HttpRequestConfig): Promise<HttpResponse<K>> {
+  // TODO: Refactor Get/Post/Delete once full tested
+  public async post<T, K>(data: T, requestConfig: HttpRequestConfig): Promise<HttpResponse<K>> {
     const axiosConfig: AxiosRequestConfig = {
       auth: {
         password: requestConfig.password,
@@ -46,6 +47,31 @@ export class HttpClient {
       },
       data,
       method: "POST",
+      responseType: "json",
+      url: requestConfig.url,
+      validateStatus: () => true,
+    };
+    const response = await this.request(axiosConfig);
+
+    // if (response.status !== 200) {
+    //   throw new Error(`Received status ${response.status} from ${requestConfig.url}`);
+    // }
+
+    return {
+      data: response.data as K,
+      status: response.status,
+    };
+  }
+
+  // TODO: Refactor Get/Post/Delete once full tested
+  public async delete<T, K>(requestConfig: HttpRequestConfig, data?: T): Promise<HttpResponse<K>> {
+    const axiosConfig: AxiosRequestConfig = {
+      auth: {
+        password: requestConfig.password,
+        username: requestConfig.username,
+      },
+      data,
+      method: "DELETE",
       responseType: "json",
       url: requestConfig.url,
       validateStatus: () => true,

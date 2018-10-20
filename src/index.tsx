@@ -10,8 +10,6 @@ const httpClient = new HttpClient();
 const grapevine = new GrapevineClient(httpClient);
 
 ReactDOM.render(
-  <Grapevine
-    grapevine={grapevine}
-  />,
+  <Grapevine grapevine={grapevine} />,
   document.getElementById("root"),
 );

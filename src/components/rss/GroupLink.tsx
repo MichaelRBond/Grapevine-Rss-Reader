@@ -1,9 +1,9 @@
 import { Button } from "@blueprintjs/core";
-import { GroupListResponse } from "external-clients/grapevine";
+import { RssGroupResponse } from "external-clients/grapevine";
 import * as React from "react";
 
 interface Props {
-  group: GroupListResponse;
+  group: RssGroupResponse;
   onClickCallback: (id: number) => void;
 }
 

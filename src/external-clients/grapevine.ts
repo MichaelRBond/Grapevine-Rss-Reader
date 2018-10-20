@@ -7,7 +7,7 @@ interface VerifyAuthenticationResponse {
   verification: boolean;
 }
 
-export interface GroupListResponse {
+export interface RssGroupResponse {
   id: number;
   name: string;
 }
@@ -82,6 +82,20 @@ interface RssItemFlagPayload {
   flag: RssItemFlags;
 }
 
+interface RssAddFeedPayload {
+  title: string;
+  url: string;
+}
+
+interface RssAddGroupPayload {
+  name: string;
+}
+
+interface RssAddFeedToGroupPayload {
+  feed_id: number;
+  group_id: number;
+}
+
 interface GrapevineStringResponse {
   message: string;
 }
@@ -89,8 +103,11 @@ interface GrapevineStringResponse {
 export class GrapevineClient {
 
   private static AUTH_URL = "/api/v1/account/verify";
-  private static LIST_GROUPS_URL = "/api/v1/group";
+  private static GROUPS_URL = "/api/v1/group";
+  private static FEED_GROUP_URL = "/api/v1/feed-group";
+  private static FEED_URL = "/api/v1/feed";
   private static FEEDS_IN_GROUP_URL = "/api/v1/group/{id}/feeds";
+  private static GROUPS_FOR_FEED_URL = `${GrapevineClient.FEED_URL}/{id}/groups`;
   private static ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
   private static ITEMS_STATUS_URL = "/api/v1/item/{id}/status";
 
@@ -117,14 +134,24 @@ export class GrapevineClient {
     return false;
   }
 
-  public async getAllGroupsList(): Promise<GroupListResponse[]> {
-    const url = `${this.endpoint}${GrapevineClient.LIST_GROUPS_URL}`;
+  public async getAllGroupsList(): Promise<RssGroupResponse[]> {
+    const url = `${this.endpoint}${GrapevineClient.GROUPS_URL}`;
     const requestParams = this.getRequestParams(url);
-    const response = await this.httpClient.get<GroupListResponse[]>(requestParams);
+    const response = await this.httpClient.get<RssGroupResponse[]>(requestParams);
     if (response.status !== 200) {
       return [];
     }
     return response.data;
+  }
+
+  public async getAllFeeds(): Promise<RssFeed[]> {
+    const url = `${this.endpoint}${GrapevineClient.FEED_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const response = await this.httpClient.get<RssFeedApiResponse[]>(requestParams);
+    if (response.status !== 200) {
+      return [];
+    }
+    return response.data.map(this.convertToRssFeed);
   }
 
   public async getFeedsForGroup(groupId: number): Promise<RssFeed[]> {
@@ -159,13 +186,86 @@ export class GrapevineClient {
     url = url.replace(/\{id\}/, itemId.toString());
     const requestParams = this.getRequestParams(url);
     const data: RssItemFlagPayload = {flag: status};
-    const response = await this.httpClient.post<RssItemFlagPayload, GrapevineStringResponse>(url, data, requestParams);
+    const response = await this.httpClient.post<RssItemFlagPayload, GrapevineStringResponse>(data, requestParams);
 
     if (response.status !== 200) {
       Logger.error(`Unable to set item status, status code=${response.status}`);
     }
 
     return;
+  }
+
+  public async addFeed(title: string, feedUrl: string): Promise<boolean> {
+    const url = `${this.endpoint}${GrapevineClient.FEED_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const data: RssAddFeedPayload = {
+      title,
+      url: feedUrl,
+    };
+    const response = await this.httpClient.post<RssAddFeedPayload, RssFeedApiResponse>(data, requestParams);
+    if (response.status !== 200) {
+      Logger.error(`Unable to add feed`);
+      return false;
+    }
+    return true;
+  }
+
+  public async addGroup(name: string): Promise<any> {
+    const url = `${this.endpoint}${GrapevineClient.GROUPS_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const data: RssAddGroupPayload = {
+      name,
+    };
+    const response = await this.httpClient.post<RssAddGroupPayload, RssGroupResponse>(data, requestParams);
+    if (response.status !== 200) {
+      Logger.error(`Unable to add group statusCode=${response.status}`);
+      return false;
+    }
+    return true;
+  }
+
+  public async addFeedToGroup(feedId: number, groupId: number): Promise<boolean> {
+    const url = `${this.endpoint}${GrapevineClient.FEED_GROUP_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const data: RssAddFeedToGroupPayload = {
+      feed_id: feedId,
+      group_id: groupId,
+    };
+    const response =
+      await this.httpClient.post<RssAddFeedToGroupPayload, {groups: RssGroupResponse}>(data, requestParams);
+    if (response.status !== 200) {
+      Logger.error(`Unable to add feed to group statusCode=${response.status}`);
+      return false;
+    }
+    return true;
+  }
+
+  public async removeFeedFromGroup(feedId: number, groupId: number): Promise<boolean> {
+    const url = `${this.endpoint}${GrapevineClient.FEED_GROUP_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const data: RssAddFeedToGroupPayload = {
+      feed_id: feedId,
+      group_id: groupId,
+    };
+    const response =
+    await this.httpClient.delete<RssAddFeedToGroupPayload, {groups: RssGroupResponse}>(requestParams, data);
+    if (response.status !== 200) {
+      Logger.error(`Unable to add feed to group statusCode=${response.status}`);
+      return false;
+    }
+    return true;
+  }
+
+  public async getGroupsForFeed(feedId: number): Promise<RssGroupResponse[]> {
+    let url = `${this.endpoint}${GrapevineClient.GROUPS_FOR_FEED_URL}`;
+    url = url.replace(/\{id\}/, feedId.toString());
+    const requestParams = this.getRequestParams(url);
+    const response = await this.httpClient.get<{groups: RssGroupResponse[]}>(requestParams);
+    if (response.status !== 200) {
+      Logger.error(`Unable to retrieve groups for feed, statusCode=${response.status}`);
+      return [];
+    }
+    return response.data.groups;
   }
 
   private initializeCredentials(username: string, password: string): void {

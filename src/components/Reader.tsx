@@ -32,7 +32,7 @@ export class Reader extends React.Component<Props, State> {
 
     return (
       <div id="reader-container">
-        <ReaderHeader />
+        <ReaderHeader grapevine={this.props.grapevine} />
         <GroupsList
           grapevine={this.props.grapevine}
           onClickCallback={this.handleGroupLinkClick}
