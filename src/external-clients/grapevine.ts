@@ -108,7 +108,8 @@ export class GrapevineClient {
   private static FEED_URL = "/api/v1/feed";
   private static FEEDS_IN_GROUP_URL = "/api/v1/group/{id}/feeds";
   private static GROUPS_FOR_FEED_URL = `${GrapevineClient.FEED_URL}/{id}/groups`;
-  private static ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
+  private static FEED_ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
+  private static ITEMS_URL = "/api/v1/items{flags}";
   private static ITEMS_STATUS_URL = "/api/v1/item/{id}/status";
 
   private username: string;
@@ -167,8 +168,23 @@ export class GrapevineClient {
 
   public async getItemsForFeed(feedId: number, flags: RssItemFlags[] = []): Promise<RssItem[]> {
     const flagsString = flags.length > 0 ? `/${flags.join("/")}` : "";
-    let url = `${this.endpoint}${GrapevineClient.ITEMS_URL}`;
+    let url = `${this.endpoint}${GrapevineClient.FEED_ITEMS_URL}`;
     url = url.replace(/\{id\}/, feedId.toString());
+    url = url.replace(/\{flags\}/, flagsString);
+
+    const requestParams = this.getRequestParams(url);
+    const response = await this.httpClient.get<RssItemApiResponse[]>(requestParams);
+
+    if (response.status !== 200) {
+      return [];
+    }
+
+    return response.data.map(this.convertToRssItem);
+  }
+
+  public async getItems(flags: RssItemFlags[] = []): Promise<RssItem[]> {
+    const flagsString = flags.length > 0 ? `/${flags.join("/")}` : "";
+    let url = `${this.endpoint}${GrapevineClient.ITEMS_URL}`;
     url = url.replace(/\{flags\}/, flagsString);
 
     const requestParams = this.getRequestParams(url);

@@ -1,4 +1,5 @@
 import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
+import { RssFeedIdentifiers } from "models/rss";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
 import { sortGroupsCompare } from "../../utils/helpers";
@@ -45,6 +46,29 @@ export class FeedsList extends React.Component<Props, State> {
     }
     return (
       <div id="feeds-container">
+        <FeedLink
+          feed={{
+            id: RssFeedIdentifiers.ALL_UNREAD,
+            title: "Show all unread",
+          } as RssFeed}
+          grapevine={this.props.grapevine}
+          groups={this.state.groups}
+          key={`feed--1`}
+          onClickCallback={this.props.onClickCallback}
+        />
+        <FeedLink
+          feed={{
+            id: RssFeedIdentifiers.ALL_STARRED,
+            title: "Show all starred",
+          } as RssFeed}
+          grapevine={this.props.grapevine}
+          groups={this.state.groups}
+          key={`feed--2`}
+          onClickCallback={this.props.onClickCallback}
+        />
+
+        <hr id="feeds-list-divider" />
+
         {this.state.feeds!.map((feed) => {
           return <FeedLink
             feed={feed}

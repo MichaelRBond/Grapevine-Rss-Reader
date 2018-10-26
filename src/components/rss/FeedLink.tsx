@@ -1,5 +1,6 @@
-import { Button, Menu, MenuItem, Popover } from "@blueprintjs/core";
+import { Button, IconName, Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
+import { RssFeedIdentifiers } from "models/rss";
 import * as React from "react";
 import { AddFeedToGroup } from "../modals/AddFeedToGroup";
 
@@ -31,32 +32,49 @@ export class FeedLink extends React.Component<Props, State> {
   }
 
   public render() {
+    const feedId = this.props.feed.id;
+
     return (
       <div style={{display: "block"}}>
         <Button
-          icon="document"
+          icon={this.determineFeedIcon(feedId)}
           minimal={true}
           text={this.props.feed.title}
-          onClick={(e) => this.props.onClickCallback(this.props.feed.id)}
+          onClick={(e: any) => this.props.onClickCallback(feedId)}
         />
-        <Popover
-          content={
-            <Menu>
-              <MenuItem text="Add to Group" onClick={this.showModalAddToGroup} />
-            </Menu>}
-          >
-          <Button icon="more" minimal={true} />
-        </Popover>
+        {feedId >= 0 &&
+          <div className="feed-menu-container">
+            <Popover
+              content={
+                <Menu>
+                  <MenuItem text="Add to Group" onClick={this.showModalAddToGroup} />
+                </Menu>}
+              >
+              <Button icon="more" minimal={true} />
+            </Popover>
 
-        <AddFeedToGroup
-          close={this.hideModalAddToGroup}
-          feed={this.props.feed}
-          grapevine={this.props.grapevine}
-          groups={this.props.groups}
-          isOpen={this.state.modalAddToGroupIsOpen}
-        />
+            <AddFeedToGroup
+              close={this.hideModalAddToGroup}
+              feed={this.props.feed}
+              grapevine={this.props.grapevine}
+              groups={this.props.groups}
+              isOpen={this.state.modalAddToGroupIsOpen}
+            />
+          </div>
+        }
       </div>
     );
+  }
+
+  private determineFeedIcon(feedId: number): IconName {
+    switch (feedId) {
+      case RssFeedIdentifiers.ALL_STARRED:
+        return "star-empty";
+      case RssFeedIdentifiers.ALL_UNREAD:
+        return "document";
+      default:
+        return "feed";
+    }
   }
 
   private showModalEditFeed(): void {

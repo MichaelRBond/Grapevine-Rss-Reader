@@ -1,5 +1,6 @@
 import { Button, NonIdealState } from "@blueprintjs/core";
 import { GrapevineClient, RssItem, RssItemFlags } from "external-clients/grapevine";
+import { RssFeedIdentifiers } from "models/rss";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
 import { Logger } from "utils/logger";
@@ -57,6 +58,8 @@ export class ItemsList extends React.Component<Props, State> {
     const unreadLabel = this.state.getUnreadOnly ? "Display All" : "Display Unread Only";
     const starredIcon = this.state.getStarredOnly ? "star-empty" : "star";
 
+    const nonIdealStateDescription = isNull(this.props.feedId) ? "No feed selected" : "No items";
+
     return (
       <div id="items-container">
         <div id="items-container-control-bar">
@@ -73,7 +76,7 @@ export class ItemsList extends React.Component<Props, State> {
           />;
         })}
         {this.state.items!.length === 0 &&
-          <NonIdealState icon="multi-select" description="No feed selected"></NonIdealState>
+          <NonIdealState icon="multi-select" description={nonIdealStateDescription}></NonIdealState>
         }
       </div>
     );
@@ -113,6 +116,10 @@ export class ItemsList extends React.Component<Props, State> {
       return;
     }
 
+    if (this.props.feedId! < 0) {
+      return this.getItemsForDefinedTypes();
+    }
+
     const statusFlags: RssItemFlags[] = [];
     if (this.state.getUnreadOnly) {
       statusFlags.push(RssItemFlags.unread);
@@ -122,6 +129,25 @@ export class ItemsList extends React.Component<Props, State> {
     }
 
     const items = await this.props.grapevine.getItemsForFeed(this.props.feedId!, statusFlags);
+    this.setState({items});
+    return;
+  }
+
+  private async getItemsForDefinedTypes(): Promise<void> {
+    const feedId = this.props.feedId;
+    if (isNull(feedId)) {
+      return;
+    }
+
+    const statusFlags: RssItemFlags[] = [];
+    if (feedId === RssFeedIdentifiers.ALL_UNREAD) {
+      statusFlags.push(RssItemFlags.unread);
+    }
+    if (feedId === RssFeedIdentifiers.ALL_STARRED) {
+      statusFlags.push(RssItemFlags.starred);
+    }
+
+    const items = await this.props.grapevine.getItems(statusFlags);
     this.setState({items});
     return;
   }

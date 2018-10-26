@@ -20,6 +20,10 @@
   order: 2;
 }
 
+.feed-menu-container {
+  display: inline-block;
+}
+
 #items-container {
   flex: 5 0px;
   order: 3;
