@@ -69,7 +69,7 @@ export class FeedsList extends React.Component<Props, State> {
 
         <hr id="feeds-list-divider" />
 
-        {this.state.feeds!.map((feed) => {
+        {this.state.feeds!.sort(this.sortCompare).map((feed) => {
           return <FeedLink
             feed={feed}
             grapevine={this.props.grapevine}
@@ -98,5 +98,9 @@ export class FeedsList extends React.Component<Props, State> {
     groups.sort(sortGroupsCompare);
     this.setState({groups});
     return;
+  }
+
+  private sortCompare(a: RssFeed, b: RssFeed): number {
+    return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
   }
 }
