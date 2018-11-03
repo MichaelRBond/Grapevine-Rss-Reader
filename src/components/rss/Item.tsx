@@ -39,9 +39,13 @@ export class Item extends React.Component<Props, State> {
       <div className="rss-item">
         <div className="rss-item-header">
           <p
-            className="rss-item-title"
+            className="rss-item-title-container"
             onClick={this.expand}
-          ><Icon icon="expand-all" className="expand-icon" />{item.title}</p>
+          >
+            <Icon icon="expand-all" className="expand-icon" />
+            <span className="rss-item-title">{item.title}</span>
+            <span className="rss-item-feed"> via {item.feed.title}</span>
+          </p>
           <div className="rss-item-toolbar">
             <p className="rss-item-date">{item.published.toString()}</p>
             <ButtonGroup minimal={true} className="rss-item-tools">

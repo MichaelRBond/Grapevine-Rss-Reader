@@ -39,7 +39,10 @@ interface RssItemApiResponse {
   comments?: string;
   description?: string;
   enclosures?: string[];
-  feed_id: number;
+  feed: {
+    id: number;
+    title: string;
+  };
   guid: string;
   id: number;
   image?: RssItemImage;
@@ -58,7 +61,10 @@ export interface RssItem {
   comments?: string;
   description?: string;
   enclosures?: string[];
-  feedId: number;
+  feed: {
+    id: number;
+    title: string;
+  };
   guid: string;
   id: number;
   image?: RssItemImage;
@@ -307,7 +313,10 @@ export class GrapevineClient {
       comments: itemApi.comments || undefined,
       description: itemApi.description || undefined,
       enclosures: itemApi.enclosures || undefined,
-      feedId: itemApi.feed_id,
+      feed: {
+        id: itemApi.feed.id,
+        title: itemApi.feed.title,
+      },
       guid: itemApi.guid,
       id: itemApi.id,
       image: itemApi.image || undefined,

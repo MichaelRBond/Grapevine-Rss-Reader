@@ -55,6 +55,14 @@
   padding: 1em;
 }
 
+.rss-item-title {
+  font-weight: bold;
+}
+
+.rss-item-feed {
+  font-style: italic;
+}
+
 .rss-item {
   margin: 1em;
   border-style: solid;
