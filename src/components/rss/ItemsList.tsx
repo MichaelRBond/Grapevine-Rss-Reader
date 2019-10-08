@@ -164,10 +164,8 @@ export class ItemsList extends React.Component<Props, State> {
       return;
     }
 
-    const updatePromises = this.state.items!.map((item) => {
-      return this.props.grapevine.setItemStatus(item.id, RssItemFlags.read);
-    });
-    await Promise.all(updatePromises);
+    const itemIds = this.state.items!.map((item) => item.id);
+    await this.props.grapevine.setItemsStatus(itemIds, RssItemFlags.read);
     await this.getItems();
   }
 }

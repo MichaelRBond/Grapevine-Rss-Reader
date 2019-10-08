@@ -88,6 +88,11 @@ interface RssItemFlagPayload {
   flag: RssItemFlags;
 }
 
+interface RssItemsStatusPayload {
+  flag: RssItemFlags;
+  ids: number[];
+}
+
 interface RssAddFeedPayload {
   title: string;
   url: string;
@@ -116,7 +121,8 @@ export class GrapevineClient {
   private static GROUPS_FOR_FEED_URL = `${GrapevineClient.FEED_URL}/{id}/groups`;
   private static FEED_ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
   private static ITEMS_URL = "/api/v1/items{flags}";
-  private static ITEMS_STATUS_URL = "/api/v1/item/{id}/status";
+  private static ITEM_STATUS_URL = "/api/v1/item/{id}/status";
+  private static ITEMS_STATUS_URL = "/api/v1/items/status";
 
   private username: string;
   private password: string;
@@ -204,11 +210,27 @@ export class GrapevineClient {
   }
 
   public async setItemStatus(itemId: number, status: RssItemFlags): Promise<void> {
-    let url = `${this.endpoint}${GrapevineClient.ITEMS_STATUS_URL}`;
+    let url = `${this.endpoint}${GrapevineClient.ITEM_STATUS_URL}`;
     url = url.replace(/\{id\}/, itemId.toString());
     const requestParams = this.getRequestParams(url);
     const data: RssItemFlagPayload = {flag: status};
     const response = await this.httpClient.post<RssItemFlagPayload, GrapevineStringResponse>(data, requestParams);
+
+    if (response.status !== 200) {
+      Logger.error(`Unable to set item status, status code=${response.status}`);
+    }
+
+    return;
+  }
+
+  public async setItemsStatus(itemIds: number[], status: RssItemFlags): Promise<void> {
+    const url = `${this.endpoint}${GrapevineClient.ITEMS_STATUS_URL}`;
+    const requestParams = this.getRequestParams(url);
+    const data: RssItemsStatusPayload = {
+      flag: status,
+      ids: itemIds,
+    };
+    const response = await this.httpClient.patch<RssItemsStatusPayload, GrapevineStringResponse>(data, requestParams);
 
     if (response.status !== 200) {
       Logger.error(`Unable to set item status, status code=${response.status}`);
