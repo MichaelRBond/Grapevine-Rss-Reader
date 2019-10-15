@@ -55,6 +55,7 @@ export class FeedsList extends React.Component<Props, State> {
           groups={this.state.groups}
           key={`feed--1`}
           onClickCallback={this.props.onClickCallback}
+          updateFeedList={this.getFeeds}
         />
         <FeedLink
           feed={{
@@ -65,6 +66,7 @@ export class FeedsList extends React.Component<Props, State> {
           groups={this.state.groups}
           key={`feed--2`}
           onClickCallback={this.props.onClickCallback}
+          updateFeedList={this.getFeeds}
         />
 
         <hr id="feeds-list-divider" />
@@ -76,6 +78,7 @@ export class FeedsList extends React.Component<Props, State> {
             groups={this.state.groups}
             key={`feed-${feed.id}`}
             onClickCallback={this.props.onClickCallback}
+            updateFeedList={this.getFeeds}
           />;
         })}
       </div>

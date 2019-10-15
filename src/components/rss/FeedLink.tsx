@@ -1,4 +1,5 @@
 import { Button, IconName, Menu, MenuItem, Popover } from "@blueprintjs/core";
+import { DeleteFeedConfirmation } from "components/modals/DeleteFeedConfirmation";
 import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
 import { RssFeedIdentifiers } from "models/rss";
 import * as React from "react";
@@ -9,10 +10,12 @@ interface Props {
   grapevine: GrapevineClient;
   groups: RssGroupResponse[];
   onClickCallback: (id: number) => void;
+  updateFeedList: () => void;
 }
 
 interface State {
   modalAddToGroupIsOpen: boolean;
+  modalDeleteConfirmIsOpen: boolean;
   modalEditFeedIsOpen: boolean;
 }
 
@@ -22,6 +25,7 @@ export class FeedLink extends React.Component<Props, State> {
 
     this.state = {
       modalAddToGroupIsOpen: false,
+      modalDeleteConfirmIsOpen: false,
       modalEditFeedIsOpen: false,
     };
 
@@ -29,6 +33,8 @@ export class FeedLink extends React.Component<Props, State> {
     this.hideModalAddToGroup = this.hideModalAddToGroup.bind(this);
     this.showModalEditFeed = this.showModalEditFeed.bind(this);
     this.hideModalEditFeed = this.hideModalEditFeed.bind(this);
+    this.showModalDeleteFeedConfirm = this.showModalDeleteFeedConfirm.bind(this);
+    this.hideModalDeleteFeedConfim = this.hideModalDeleteFeedConfim.bind(this);
   }
 
   public render() {
@@ -48,6 +54,7 @@ export class FeedLink extends React.Component<Props, State> {
               content={
                 <Menu>
                   <MenuItem text="Add to Group" onClick={this.showModalAddToGroup} />
+                  <MenuItem text="Delete Feed" onClick={this.showModalDeleteFeedConfirm} />
                 </Menu>}
               >
               <Button icon="more" minimal={true} />
@@ -59,6 +66,13 @@ export class FeedLink extends React.Component<Props, State> {
               grapevine={this.props.grapevine}
               groups={this.props.groups}
               isOpen={this.state.modalAddToGroupIsOpen}
+            />
+
+            <DeleteFeedConfirmation
+              close={this.hideModalDeleteFeedConfim}
+              feed={this.props.feed}
+              grapevine={this.props.grapevine}
+              isOpen={this.state.modalDeleteConfirmIsOpen}
             />
           </div>
         }
@@ -91,5 +105,14 @@ export class FeedLink extends React.Component<Props, State> {
 
   private hideModalAddToGroup(): void {
     return this.setState({modalAddToGroupIsOpen: false});
+  }
+
+  private showModalDeleteFeedConfirm(): void {
+    return this.setState({modalDeleteConfirmIsOpen: true});
+  }
+
+  private hideModalDeleteFeedConfim(): void {
+    this.props.updateFeedList();
+    return this.setState({modalDeleteConfirmIsOpen: false});
   }
 }

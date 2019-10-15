@@ -117,6 +117,7 @@ export class GrapevineClient {
   private static GROUPS_URL = "/api/v1/group";
   private static FEED_GROUP_URL = "/api/v1/feed-group";
   private static FEED_URL = "/api/v1/feed";
+  private static FEED_WITH_ID_URL = `${GrapevineClient.FEED_URL}/{id}`;
   private static FEEDS_IN_GROUP_URL = "/api/v1/group/{id}/feeds";
   private static GROUPS_FOR_FEED_URL = `${GrapevineClient.FEED_URL}/{id}/groups`;
   private static FEED_ITEMS_URL = "/api/v1/items/feed/{id}{flags}";
@@ -310,6 +311,17 @@ export class GrapevineClient {
       return [];
     }
     return response.data.groups;
+  }
+
+  public async deleteFeed(feedId: number): Promise<void> {
+    let url = `${this.endpoint}${GrapevineClient.FEED_WITH_ID_URL}`;
+    url = url.replace(/\{id\}/, feedId.toString());
+    const requestParams = this.getRequestParams(url);
+    const response = await this.httpClient.delete<{message: string}, any>(requestParams);
+    if (response.status !== 200) {
+      Logger.error(`Unable to delete feed id = ${feedId}`);
+    }
+    return;
   }
 
   private initializeCredentials(username: string, password: string): void {
