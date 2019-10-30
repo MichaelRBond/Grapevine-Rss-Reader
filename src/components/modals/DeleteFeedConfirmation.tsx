@@ -1,5 +1,5 @@
 import { Button } from "@blueprintjs/core";
-import { GrapevineClient, RssFeed } from "external-clients/grapevine";
+import { GrapevineClient, RssFeed } from "grapevine-rss-client-javascript";
 import * as React from "react";
 import * as ReactModal from "react-modal";
 

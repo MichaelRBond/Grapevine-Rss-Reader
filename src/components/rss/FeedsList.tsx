@@ -1,4 +1,4 @@
-import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
+import { GrapevineClient, RssFeed, RssGroupResponse } from "grapevine-rss-client-javascript";
 import { RssFeedIdentifiers } from "models/rss";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";

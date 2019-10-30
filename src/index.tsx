@@ -1,13 +1,12 @@
 import { Grapevine } from "components/Grapevine";
+import config from "config";
+import { GrapevineClient } from "grapevine-rss-client-javascript";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { GrapevineClient } from "./external-clients/grapevine";
-import { HttpClient } from "./utils/http";
 
 declare var document: any;
 
-const httpClient = new HttpClient();
-const grapevine = new GrapevineClient(httpClient);
+const grapevine = new GrapevineClient(config.grapevineHost);
 
 ReactDOM.render(
   <Grapevine grapevine={grapevine} />,

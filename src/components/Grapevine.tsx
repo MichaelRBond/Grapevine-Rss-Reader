@@ -1,4 +1,4 @@
-import { GrapevineClient } from "external-clients/grapevine";
+import { GrapevineClient } from "grapevine-rss-client-javascript";
 import { isNotNull, isNull, Nullable } from "nullable-ts";
 import * as React from "react";
 import { Login } from "./Login";

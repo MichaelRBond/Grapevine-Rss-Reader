@@ -1,5 +1,5 @@
 import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
-import { GrapevineClient } from "external-clients/grapevine";
+import { GrapevineClient } from "grapevine-rss-client-javascript";
 import * as React from "react";
 import * as ReactModal from "react-modal";
 import { isBlank } from "utils/helpers";

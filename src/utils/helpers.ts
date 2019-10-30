@@ -1,4 +1,4 @@
-import { RssGroupResponse } from "external-clients/grapevine";
+import { RssGroupResponse } from "grapevine-rss-client-javascript";
 import { isNullOrUndefined } from "nullable-ts";
 
 export function isBlank(str: string): boolean {

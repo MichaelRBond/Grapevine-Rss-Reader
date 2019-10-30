@@ -1,4 +1,4 @@
-import { GrapevineClient, RssGroupResponse } from "external-clients/grapevine";
+import { GrapevineClient, RssGroupResponse } from "grapevine-rss-client-javascript";
 import { isNull, Nullable } from "nullable-ts";
 import * as React from "react";
 import { sortGroupsCompare } from "../../utils/helpers";

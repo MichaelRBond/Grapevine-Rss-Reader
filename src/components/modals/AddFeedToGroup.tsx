@@ -1,6 +1,6 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemPredicate, ItemRenderer, MultiSelect } from "@blueprintjs/select";
-import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
+import { GrapevineClient, RssFeed, RssGroupResponse } from "grapevine-rss-client-javascript";
 import * as React from "react";
 import * as ReactModal from "react-modal";
 import { arrayDiff } from "utils/helpers";

@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Collapse, Icon } from "@blueprintjs/core";
-import { GrapevineClient, RssItem, RssItemFlags } from "external-clients/grapevine";
+import { GrapevineClient, RssItem, RssItemFlags } from "grapevine-rss-client-javascript";
 import * as React from "react";
 
 declare var window: any;

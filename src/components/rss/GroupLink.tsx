@@ -1,5 +1,5 @@
 import { Button } from "@blueprintjs/core";
-import { RssGroupResponse } from "external-clients/grapevine";
+import { RssGroupResponse } from "grapevine-rss-client-javascript";
 import * as React from "react";
 
 interface Props {

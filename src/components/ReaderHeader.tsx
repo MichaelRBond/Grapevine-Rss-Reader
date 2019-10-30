@@ -1,5 +1,5 @@
 import { Button, Menu, MenuItem, Popover } from "@blueprintjs/core";
-import { GrapevineClient } from "external-clients/grapevine";
+import { GrapevineClient } from "grapevine-rss-client-javascript";
 import * as React from "react";
 import { AddFeed } from "./modals/AddFeed";
 import { AddGroup } from "./modals/AddGroup";

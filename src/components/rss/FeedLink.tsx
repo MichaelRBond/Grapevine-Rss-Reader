@@ -1,6 +1,6 @@
 import { Button, IconName, Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { DeleteFeedConfirmation } from "components/modals/DeleteFeedConfirmation";
-import { GrapevineClient, RssFeed, RssGroupResponse } from "external-clients/grapevine";
+import { GrapevineClient, RssFeed, RssGroupResponse } from "grapevine-rss-client-javascript";
 import { RssFeedIdentifiers } from "models/rss";
 import * as React from "react";
 import { AddFeedToGroup } from "../modals/AddFeedToGroup";
