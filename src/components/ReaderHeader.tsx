@@ -33,7 +33,10 @@ export class ReaderHeader extends React.Component<Props, State> {
 
     return (
       <div id="reader-header">
-        <strong>Grapevine RSS</strong>
+        <div style={{display: "flex", margin: "auto"}}>
+          <img src={require("../assets/grapes.png")} style={{width: "50px", paddingRight: "1em"}}/>
+          <strong>Grapevine RSS</strong>
+        </div>
         <Popover
           content={<Menu>
             <MenuItem text="Add Feed" onClick={this.showModalAddFeed} />

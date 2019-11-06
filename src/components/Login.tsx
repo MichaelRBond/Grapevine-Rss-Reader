@@ -44,7 +44,8 @@ export class Login extends React.Component<Props, State> {
   );
 
     return (
-      <div id="login" style={{width: "25%"}}>
+      <div id="login" style={{ maxWidth: "50vh", margin: "auto" }}>
+        <img src={require("../assets/grapevine.png")} style={{width: "100%"}}/>
         <form onSubmit={(e: any) => this.submit(e)}>
           <ControlGroup
             vertical={true}
