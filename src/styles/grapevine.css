@@ -76,6 +76,11 @@
   border-top-color: lightgray;
 }
 
+.rss-item-text img {
+  max-width: 100%;
+  height: auto;
+}
+
 .expand-icon {
   margin-right: 1em;
 }

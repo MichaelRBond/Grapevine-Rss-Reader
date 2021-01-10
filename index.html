@@ -4,8 +4,13 @@
     <meta charset="utf-8">
     <title>Grapevine Rss Reader</title>
   </head>
-  <body>
+  <body onload="focusLogin()">
     <div id="root"></div>
     <script src="main.js"></script>
   </body>
+  <script>
+    function focusLogin() {
+      document.getElementById("username").focus();
+    }
+  </script>
 </html>
